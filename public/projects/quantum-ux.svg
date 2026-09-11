@@ -1,0 +1,83 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 800 500" width="800" height="500">
+  <defs>
+    <linearGradient id="bg" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#F4F7FA"/>
+      <stop offset="100%" stop-color="#E8EEF5"/>
+    </linearGradient>
+    <linearGradient id="limeGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#98F238"/>
+      <stop offset="100%" stop-color="#86E52B"/>
+    </linearGradient>
+  </defs>
+  
+  <!-- Background Canvas -->
+  <rect width="800" height="500" fill="url(#bg)"/>
+  
+  <!-- Structural Blueprint Grid -->
+  <g stroke="#DCE2E8" stroke-width="1" opacity="0.6">
+    <line x1="40" y1="0" x2="40" y2="500"/>
+    <line x1="120" y1="0" x2="120" y2="500"/>
+    <line x1="200" y1="0" x2="200" y2="500"/>
+    <line x1="280" y1="0" x2="280" y2="500"/>
+    <line x1="360" y1="0" x2="360" y2="500"/>
+    <line x1="440" y1="0" x2="440" y2="500"/>
+    <line x1="520" y1="0" x2="520" y2="500"/>
+    <line x1="600" y1="0" x2="600" y2="500"/>
+    <line x1="680" y1="0" x2="680" y2="500"/>
+    <line x1="760" y1="0" x2="760" y2="500"/>
+    
+    <line x1="0" y1="50" x2="800" y2="50"/>
+    <line x1="0" y1="120" x2="800" y2="120"/>
+    <line x1="0" y1="200" x2="800" y2="200"/>
+    <line x1="0" y1="280" x2="800" y2="280"/>
+    <line x1="0" y1="360" x2="800" y2="360"/>
+    <line x1="0" y1="440" x2="800" y2="440"/>
+  </g>
+
+  <!-- Central Interface Frame -->
+  <rect x="80" y="60" width="640" height="380" rx="16" fill="#FFFFFF" stroke="#DCE2E8" stroke-width="1.5"/>
+  
+  <!-- Header Bar -->
+  <rect x="80" y="60" width="640" height="48" rx="16" fill="#F8F9F6" stroke="#DCE2E8" stroke-width="1"/>
+  <circle cx="110" cy="84" r="5" fill="#DCE2E8"/>
+  <circle cx="126" cy="84" r="5" fill="#DCE2E8"/>
+  <circle cx="142" cy="84" r="5" fill="#98F238"/>
+  
+  <rect x="220" y="74" width="360" height="20" rx="10" fill="#E8EEF5"/>
+  <rect x="230" y="80" width="120" height="8" rx="4" fill="#354154" opacity="0.5"/>
+
+  <!-- Left Sidebar Components -->
+  <rect x="104" y="130" width="160" height="280" rx="10" fill="#F4F7FA" stroke="#DCE2E8" stroke-width="1"/>
+  <rect x="120" y="150" width="80" height="12" rx="3" fill="#111827"/>
+  <rect x="120" y="174" width="128" height="24" rx="6" fill="#E8FFD0" stroke="#98F238" stroke-width="1"/>
+  <rect x="130" y="182" width="70" height="8" rx="3" fill="#496F16"/>
+  <rect x="120" y="210" width="128" height="24" rx="6" fill="#FFFFFF" stroke="#DCE2E8" stroke-width="1"/>
+  <rect x="120" y="244" width="128" height="24" rx="6" fill="#FFFFFF" stroke="#DCE2E8" stroke-width="1"/>
+  <rect x="120" y="278" width="128" height="24" rx="6" fill="#FFFFFF" stroke="#DCE2E8" stroke-width="1"/>
+
+  <!-- Main Component Canvas -->
+  <rect x="284" y="130" width="412" height="180" rx="12" fill="#F8F9F6" stroke="#DCE2E8" stroke-width="1"/>
+  <rect x="310" y="156" width="140" height="16" rx="4" fill="#111827"/>
+  <rect x="310" y="182" width="240" height="10" rx="3" fill="#697386" opacity="0.6"/>
+  
+  <!-- Interactive Tokens -->
+  <rect x="310" y="215" width="80" height="32" rx="8" fill="url(#limeGrad)"/>
+  <rect x="325" y="227" width="50" height="8" rx="3" fill="#111827"/>
+  
+  <rect x="400" y="215" width="80" height="32" rx="8" fill="#FFFFFF" stroke="#DCE2E8" stroke-width="1"/>
+  <rect x="415" y="227" width="50" height="8" rx="3" fill="#354154"/>
+  
+  <rect x="490" y="215" width="80" height="32" rx="8" fill="#FFFFFF" stroke="#DCE2E8" stroke-width="1"/>
+  <rect x="505" y="227" width="50" height="8" rx="3" fill="#354154"/>
+
+  <!-- Lower Stats Matrix -->
+  <rect x="284" y="326" width="198" height="84" rx="10" fill="#FFFFFF" stroke="#DCE2E8" stroke-width="1"/>
+  <rect x="304" y="344" width="60" height="10" rx="3" fill="#697386"/>
+  <rect x="304" y="362" width="90" height="22" rx="4" fill="#111827"/>
+
+  <rect x="498" y="326" width="198" height="84" rx="10" fill="#E8F5EE" stroke="#98F238" stroke-width="1"/>
+  <rect x="518" y="344" width="70" height="10" rx="3" fill="#496F16"/>
+  <rect x="518" y="362" width="100" height="22" rx="4" fill="#111827"/>
+  <circle cx="664" cy="368" r="12" fill="#98F238"/>
+  <path d="M660 368 L663 371 L669 365" stroke="#111827" stroke-width="2" stroke-linecap="round" fill="none"/>
+</svg>

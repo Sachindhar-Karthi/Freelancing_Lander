@@ -1,26 +1,135 @@
 @import "tailwindcss";
 
 :root {
-  --background: #ffffff;
-  --foreground: #171717;
+  /* LIGHT MODE TOKENS (Lime Frost) */
+  --background: #F8F9F6;
+  --surface: #FFFFFF;
+  --surface-elevated: #FFFFFF;
+  --surface-muted: #EEF3F7;
+  --foreground: #111827;
+  --foreground-muted: #596579;
+  --border: #DCE2E8;
+  --accent: #98F238;
+  --accent-hover: #86E52B;
+  --accent-soft: #E8FFD0;
+  --focus: #5F921D;
+}
+
+.dark {
+  /* DARK MODE TOKENS (Minimal Orange) */
+  --background: #0F1115;
+  --surface: #151920;
+  --surface-elevated: #1B2028;
+  --surface-muted: #212731;
+  --foreground: #F5F2EA;
+  --foreground-muted: #A9AFBA;
+  --border: #2D3440;
+  --accent: #F59E42;
+  --accent-hover: #FFAD55;
+  --accent-soft: #382315;
+  --focus: #FFB15A;
 }
 
 @theme inline {
   --color-background: var(--background);
+  --color-surface: var(--surface);
+  --color-surface-elevated: var(--surface-elevated);
+  --color-surface-muted: var(--surface-muted);
   --color-foreground: var(--foreground);
+  --color-foreground-muted: var(--foreground-muted);
+  --color-border: var(--border);
+  --color-accent: var(--accent);
+  --color-accent-hover: var(--accent-hover);
+  --color-accent-soft: var(--accent-soft);
+  --color-focus: var(--focus);
   --font-sans: var(--font-geist-sans);
   --font-mono: var(--font-geist-mono);
 }
 
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
-  }
+html {
+  scroll-behavior: smooth;
+}
+
+/* Ensure sticky navigation never cuts off anchored section headers */
+[id] {
+  scroll-margin-top: 5.5rem;
 }
 
 body {
-  background: var(--background);
+  background-color: var(--background);
   color: var(--foreground);
-  font-family: Arial, Helvetica, sans-serif;
+  font-family: var(--font-geist-sans), system-ui, -apple-system, sans-serif;
+  overflow-x: hidden;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+/* Two-layer accessible focus ring */
+:focus-visible {
+  outline: 2px solid var(--focus);
+  outline-offset: 2px;
+}
+
+/* Fine pointer halo */
+@media (pointer: fine) {
+  .pointer-halo {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 28px;
+    height: 28px;
+    margin-top: -14px;
+    margin-left: -14px;
+    border-radius: 9999px;
+    background-color: var(--accent);
+    opacity: 0.18;
+    pointer-events: none;
+    z-index: 9999;
+    transition: width 0.15s ease-out, height 0.15s ease-out, margin 0.15s ease-out, opacity 0.15s ease-out;
+    transform: translate3d(-100px, -100px, 0);
+  }
+
+  .pointer-halo.is-hovering {
+    width: 44px;
+    height: 44px;
+    margin-top: -22px;
+    margin-left: -22px;
+    opacity: 0.28;
+  }
+}
+
+@media (pointer: coarse) {
+  .pointer-halo {
+    display: none !important;
+  }
+}
+
+/* Retro Grid Keyframes */
+@keyframes grid {
+  0% {
+    transform: translateY(0);
+  }
+  100% {
+    transform: translateY(calc(var(--cell-size, 50px) * 2));
+  }
+}
+
+.animate-grid {
+  animation: grid 20s linear infinite;
+}
+
+/* Reduced motion accessibility */
+@media (prefers-reduced-motion: reduce) {
+  *, ::before, ::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+  .animate-grid {
+    animation: none !important;
+  }
+  .pointer-halo {
+    display: none !important;
+  }
 }

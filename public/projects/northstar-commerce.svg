@@ -1,0 +1,70 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 800 500" width="800" height="500">
+  <defs>
+    <linearGradient id="comBg" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#F4F7FA"/>
+      <stop offset="100%" stop-color="#E8EEF5"/>
+    </linearGradient>
+    <linearGradient id="limeGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#98F238"/>
+      <stop offset="100%" stop-color="#86E52B"/>
+    </linearGradient>
+  </defs>
+  
+  <rect width="800" height="500" fill="url(#comBg)"/>
+  
+  <!-- Architectural Grid -->
+  <g stroke="#DCE2E8" stroke-width="1" opacity="0.6">
+    <line x1="80" y1="0" x2="80" y2="500"/>
+    <line x1="200" y1="0" x2="200" y2="500"/>
+    <line x1="360" y1="0" x2="360" y2="500"/>
+    <line x1="520" y1="0" x2="520" y2="500"/>
+    <line x1="680" y1="0" x2="680" y2="500"/>
+    <line x1="0" y1="70" x2="800" y2="70"/>
+    <line x1="0" y1="200" x2="800" y2="200"/>
+    <line x1="0" y1="350" x2="800" y2="350"/>
+  </g>
+
+  <!-- Storefront Browser Frame -->
+  <rect x="80" y="50" width="640" height="400" rx="16" fill="#FFFFFF" stroke="#DCE2E8" stroke-width="1.5"/>
+  
+  <!-- Store Navigation Header -->
+  <rect x="80" y="50" width="640" height="48" rx="16" fill="#F8F9F6" stroke="#DCE2E8" stroke-width="1"/>
+  <text x="110" y="79" font-family="sans-serif" font-size="14" fill="#111827" font-weight="bold">NORTHSTAR</text>
+  <rect x="230" y="66" width="60" height="16" rx="8" fill="#EEF3F7"/>
+  <rect x="300" y="66" width="60" height="16" rx="8" fill="#EEF3F7"/>
+  <rect x="370" y="66" width="60" height="16" rx="8" fill="#EEF3F7"/>
+  
+  <!-- Cart Indicator Badge -->
+  <rect x="640" y="62" width="56" height="24" rx="12" fill="#E8FFD0" stroke="#98F238" stroke-width="1"/>
+  <text x="652" y="78" font-family="monospace" font-size="10" fill="#496F16" font-weight="bold">BAG (2)</text>
+
+  <!-- Left Product Hero Image Preview -->
+  <rect x="110" y="120" width="300" height="300" rx="12" fill="#F8F9F6" stroke="#DCE2E8" stroke-width="1"/>
+  <!-- Minimalist Product Geometric Silhouette -->
+  <circle cx="260" cy="250" r="70" fill="#FFFFFF" stroke="#98F238" stroke-width="2"/>
+  <circle cx="260" cy="250" r="40" fill="#EEF3F7"/>
+  <line x1="260" y1="160" x2="260" y2="340" stroke="#DCE2E8" stroke-width="1.5"/>
+  <line x1="170" y1="250" x2="350" y2="250" stroke="#DCE2E8" stroke-width="1.5"/>
+
+  <!-- Right Product Details & Rapid Checkout -->
+  <g transform="translate(440, 120)">
+    <text x="0" y="20" font-family="monospace" font-size="10" fill="#697386" font-weight="bold">SERIES 04 // PRECISION CHRONO</text>
+    <text x="0" y="52" font-family="sans-serif" font-size="22" fill="#111827" font-weight="bold">Northstar Minimalist 40mm</text>
+    <text x="0" y="80" font-family="sans-serif" font-size="18" fill="#111827" font-weight="bold">$480.00</text>
+    
+    <!-- Color Swatches -->
+    <text x="0" y="112" font-family="sans-serif" font-size="11" fill="#354154">Colorway</text>
+    <circle cx="12" cy="132" r="10" fill="#111827" stroke="#98F238" stroke-width="2"/>
+    <circle cx="42" cy="132" r="10" fill="#98F238"/>
+    <circle cx="72" cy="132" r="10" fill="#DCE2E8"/>
+
+    <!-- Speed Metric -->
+    <rect x="0" y="164" width="240" height="52" rx="10" fill="#F4F7FA" stroke="#DCE2E8" stroke-width="1"/>
+    <text x="16" y="186" font-family="monospace" font-size="9" fill="#697386">PERFORMANCE</text>
+    <text x="16" y="204" font-family="sans-serif" font-size="12" fill="#496F16" font-weight="bold">0.4s Instant Checkout</text>
+
+    <!-- Primary CTA -->
+    <rect x="0" y="240" width="240" height="46" rx="23" fill="url(#limeGrad)"/>
+    <text x="74" y="268" font-family="sans-serif" font-size="13" fill="#111827" font-weight="bold">Express Checkout</text>
+  </g>
+</svg>

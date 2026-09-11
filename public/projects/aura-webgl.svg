@@ -1,0 +1,50 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 800 500" width="800" height="500">
+  <defs>
+    <linearGradient id="auraBg" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#E8EEF5"/>
+      <stop offset="100%" stop-color="#DCE6F0"/>
+    </linearGradient>
+    <linearGradient id="waveGrad" x1="0%" y1="0%" x2="100%" y2="0%">
+      <stop offset="0%" stop-color="#354154"/>
+      <stop offset="50%" stop-color="#98F238"/>
+      <stop offset="100%" stop-color="#354154"/>
+    </linearGradient>
+  </defs>
+
+  <!-- Background -->
+  <rect width="800" height="500" fill="url(#auraBg)"/>
+
+  <!-- Radial grid circles -->
+  <g stroke="#DCE2E8" stroke-width="1" fill="none" opacity="0.8">
+    <circle cx="400" cy="250" r="80"/>
+    <circle cx="400" cy="250" r="140"/>
+    <circle cx="400" cy="250" r="200"/>
+    <circle cx="400" cy="250" r="260"/>
+    <line x1="140" y1="250" x2="660" y2="250"/>
+    <line x1="400" y1="50" x2="400" y2="450"/>
+    <line x1="216" y1="108" x2="584" y2="392"/>
+    <line x1="216" y1="392" x2="584" y2="108"/>
+  </g>
+
+  <!-- Geometric 3D Polyhedral Nodes -->
+  <polygon points="400,160 480,210 480,290 400,340 320,290 320,210" fill="#FFFFFF" stroke="#DCE2E8" stroke-width="2" opacity="0.9"/>
+  <polygon points="400,160 480,210 400,250 320,210" fill="#F4F7FA" stroke="#DCE2E8" stroke-width="1.5"/>
+  <polygon points="480,210 480,290 400,250" fill="#E8EEF5" stroke="#DCE2E8" stroke-width="1.5"/>
+  <polygon points="400,340 480,290 400,250" fill="#DCE6F0" stroke="#DCE2E8" stroke-width="1.5"/>
+  <polygon points="400,340 320,290 400,250" fill="#E8EEF5" stroke="#DCE2E8" stroke-width="1.5"/>
+  <polygon points="320,210 320,290 400,250" fill="#F4F7FA" stroke="#DCE2E8" stroke-width="1.5"/>
+
+  <!-- Vibrant Lime Core Indicator -->
+  <circle cx="400" cy="250" r="24" fill="#98F238" stroke="#496F16" stroke-width="2"/>
+  <circle cx="400" cy="250" r="8" fill="#111827"/>
+
+  <!-- Waveform Ribbon -->
+  <path d="M 120,380 Q 220,260 320,340 T 480,310 T 680,240" fill="none" stroke="url(#waveGrad)" stroke-width="4" stroke-linecap="round"/>
+
+  <!-- Measurement Overlay Badges -->
+  <rect x="80" y="80" width="140" height="36" rx="8" fill="#FFFFFF" stroke="#DCE2E8" stroke-width="1"/>
+  <text x="96" y="103" font-family="monospace" font-size="12" fill="#111827" font-weight="bold">60 FPS // R3F</text>
+
+  <rect x="580" y="80" width="140" height="36" rx="8" fill="#E8FFD0" stroke="#98F238" stroke-width="1"/>
+  <text x="596" y="103" font-family="monospace" font-size="12" fill="#496F16" font-weight="bold">WebGL 2.0 // Active</text>
+</svg>
