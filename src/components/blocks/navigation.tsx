@@ -5,6 +5,7 @@ import Link from "next/link";
 import { Menu, X, Search, ArrowRight, Sparkles } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
 import { ThemeToggle } from "@/components/ui/theme-toggle";
+import { MagneticButton } from "@/components/ui/magnetic-button";
 import { CommandMenu } from "./command-menu";
 import { ProjectModal } from "./project-modal";
 import type { Project } from "@/data/projects";
@@ -156,13 +157,15 @@ export function Navigation() {
             {/* Theme Toggle Dropdown */}
             <ThemeToggle />
 
-            {/* Contact CTA */}
-            <Link
+            {/* Contact CTA with Magnetic Hover Effect */}
+            <MagneticButton
               href="#contact"
-              className="text-xs font-semibold text-[var(--foreground)] bg-[var(--accent)] hover:bg-[var(--accent-hover)] px-4 py-2.5 rounded-full transition-all shadow-xs active:scale-[0.98]"
+              strength={0.24}
+              textStrength={0.12}
+              className="text-xs font-semibold text-[var(--foreground)] bg-[var(--accent)] hover:bg-[var(--accent-hover)] px-4 py-2.5 rounded-full transition-colors shadow-xs"
             >
-              Get in touch
-            </Link>
+              <span>Get in touch</span>
+            </MagneticButton>
           </div>
 
           {/* Mobile Menu Actions */}

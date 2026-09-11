@@ -124,7 +124,7 @@ const services: ServiceItem[] = [
 export function ServicesSection() {
   return (
     <section 
-      className="py-20 md:py-28 px-6 bg-[var(--background)] border-b border-[var(--border)] relative" 
+      className="py-20 md:py-28 px-6 bg-[var(--background)]/30 backdrop-blur-lg border-b border-[var(--border)] relative z-20" 
       id="services"
     >
       <div className="max-w-screen-xl mx-auto">

@@ -33,7 +33,7 @@ const capabilities = [
 
 export function CapabilityStrip() {
   return (
-    <section className="border-y border-[var(--border)] bg-[var(--surface)] py-5 px-6 relative z-20">
+    <section className="border-y border-[var(--border)] bg-[var(--surface)]/30 backdrop-blur-lg py-5 px-6 relative z-20">
       <div className="max-w-screen-xl mx-auto flex flex-wrap items-center justify-between gap-6 md:gap-8">
         <div className="flex items-center gap-2">
           <span className="w-2 h-2 rounded-full bg-[var(--accent)] animate-pulse" />

@@ -5,7 +5,7 @@ import { User, Target, Compass, Sparkles } from "lucide-react";
 
 export function AboutSection() {
   return (
-    <section className="py-20 md:py-28 px-6 bg-[var(--background)] border-b border-[var(--border)]" id="about">
+    <section className="py-20 md:py-28 px-6 bg-[var(--background)]/30 backdrop-blur-lg border-b border-[var(--border)] relative z-20" id="about">
       <div className="max-w-screen-xl mx-auto">
         <div className="grid grid-cols-1 lg:grid-cols-12 gap-12 items-start">
           {/* Left Column: Positioning & Philosophy */}

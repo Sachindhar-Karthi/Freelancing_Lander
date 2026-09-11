@@ -4,6 +4,7 @@ import { Suspense, useEffect, useRef, useState } from "react";
 import { Canvas, useFrame, useThree } from "@react-three/fiber";
 import { Float } from "@react-three/drei";
 import { Particles } from "./Particles";
+import { FluidTerrain } from "./FluidTerrain";
 import * as THREE from "three";
 import gsap from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
@@ -44,9 +45,9 @@ function CameraRig() {
   }, [camera]);
 
   useFrame((state) => {
-    // Subtle mouse parallax
-    state.camera.position.x += (state.pointer.x * 0.3 - state.camera.position.x) * 0.03;
-    state.camera.position.y += (state.pointer.y * 0.3 - state.camera.position.y) * 0.03;
+    // Subtle mouse parallax at 120 FPS
+    state.camera.position.x += (state.pointer.x * 0.3 - state.camera.position.x) * 0.04;
+    state.camera.position.y += (state.pointer.y * 0.3 - state.camera.position.y) * 0.04;
     state.camera.lookAt(0, 0, 0);
   });
 
@@ -58,6 +59,11 @@ function ModularCore() {
   const outerMeshRef = useRef<THREE.Mesh>(null);
   const coreMeshRef = useRef<THREE.Mesh>(null);
   const timeRef = useRef(0);
+  const { viewport } = useThree();
+  
+  // Responsive offset for 2-column layout. When on large screens, move to left half.
+  const isDesktop = viewport.width > 6;
+  const targetX = isDesktop ? -viewport.width * 0.25 : 0;
 
   useFrame((_, delta) => {
     timeRef.current += delta;
@@ -70,44 +76,48 @@ function ModularCore() {
       coreMeshRef.current.rotation.y -= 0.006;
       coreMeshRef.current.rotation.z = Math.cos(t * 0.3) * 0.2;
     }
+    if (groupRef.current) {
+      // Smoothly interpolate position for responsiveness
+      groupRef.current.position.x += (targetX - groupRef.current.position.x) * 0.05;
+    }
   });
 
   return (
     <Float speed={1.8} rotationIntensity={0.4} floatIntensity={0.8}>
-      <group ref={groupRef} position={[0, 0, -4]}>
+      <group ref={groupRef} position={[0, 0, -5]}>
         {/* Outer Matte Frost Shell */}
-        <mesh ref={outerMeshRef} scale={2.2}>
+        <mesh ref={outerMeshRef} scale={2.8}>
           <icosahedronGeometry args={[1, 1]} />
           <meshStandardMaterial 
-            color="#E8EEF5"
+            color="#FFFFFF"
             metalness={0.1}
-            roughness={0.3}
+            roughness={0.1}
             wireframe={true}
             transparent
-            opacity={0.35}
+            opacity={0.15}
           />
         </mesh>
 
         {/* Central Vibrant Focal Core */}
-        <mesh ref={coreMeshRef} scale={1.1}>
+        <mesh ref={coreMeshRef} scale={1.4}>
           <octahedronGeometry args={[1, 0]} />
           <meshStandardMaterial 
             color="#98F238"
-            emissive="#496F16"
-            emissiveIntensity={0.2}
-            metalness={0.2}
+            emissive="#5F921D"
+            emissiveIntensity={0.4}
+            metalness={0.3}
             roughness={0.2}
             transparent
-            opacity={0.85}
+            opacity={0.9}
           />
         </mesh>
 
         {/* Translucent Ring */}
-        <mesh position={[0, 0, 0]} scale={1.6}>
-          <torusGeometry args={[1.2, 0.04, 16, 60]} />
+        <mesh position={[0, 0, 0]} scale={2.0}>
+          <torusGeometry args={[1.2, 0.02, 16, 60]} />
           <meshStandardMaterial
-            color="#DCE6F0"
-            metalness={0.3}
+            color="#98F238"
+            metalness={0.4}
             roughness={0.2}
             transparent
             opacity={0.4}
@@ -186,13 +196,16 @@ export function Scene() {
         <Suspense fallback={null}>
           <CameraRig />
           {/* Soft Studio Lighting */}
-          <ambientLight intensity={0.7} />
-          <directionalLight position={[10, 15, 10]} intensity={1.2} color="#FFFFFF" />
-          <directionalLight position={[-10, -10, -5]} intensity={0.4} color="#E8F5EE" />
-          <pointLight position={[0, 0, 2]} intensity={0.5} color="#98F238" />
+          <ambientLight intensity={0.8} />
+          <directionalLight position={[10, 15, 10]} intensity={1.4} color="#FFFFFF" />
+          <directionalLight position={[-10, -10, -5]} intensity={0.5} color="#E8F5EE" />
+          <pointLight position={[0, 0, 2]} intensity={0.6} color="#98F238" />
           
+          {/* Fluid Abstract Terrain Shader reacting to cursor */}
+          <FluidTerrain />
+
           <ModularCore />
-          <Particles count={isMobile ? 120 : 400} />
+          <Particles count={isMobile ? 100 : 350} />
         </Suspense>
       </Canvas>
     </div>

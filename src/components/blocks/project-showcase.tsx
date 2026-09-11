@@ -24,7 +24,7 @@ export function ProjectShowcase() {
   return (
     <>
       <section 
-        className="relative py-20 md:py-28 px-6 bg-[var(--surface-muted)] border-b border-[var(--border)]" 
+        className="relative py-20 md:py-28 px-6 bg-[var(--surface-muted)]/30 backdrop-blur-lg border-b border-[var(--border)] z-20" 
         id="work"
       >
         <div className="max-w-screen-xl mx-auto">

@@ -13,6 +13,24 @@
   --accent-hover: #86E52B;
   --accent-soft: #E8FFD0;
   --focus: #5F921D;
+
+  /* Fluid Sizing & Spacing Tokens from relay_1.txt & relay_2.txt */
+  --card-ref-w: 429;
+  --card-ref-h: 554;
+  --card-radius: 17;
+  --card-count: 3;
+  --gap: clamp(8px, 1.5vw, 23px);
+  --gutter: clamp(14px, 3.6vw, 54px);
+  --pad-x: clamp(20px, 3.52vw, 64px);
+  --nav-top: clamp(16px, 2.05vw, 28px);
+  --pad-top: clamp(20px, 9.6vh, 94px);
+  --pad-bottom: clamp(16px, 3vh, 52px);
+  --masthead-gap: clamp(16px, 3vw, 40px);
+  --cards-offset: clamp(14px, 9.4vh, 92px);
+  --content-max: calc(var(--card-count) * var(--card-ref-w) * 1px + (var(--card-count) - 1) * var(--gap));
+  --glass-blur: 18px;
+  --glass-light: rgba(255, 255, 255, 0.28);
+  --glass-line: rgba(255, 255, 255, 0.36);
 }
 
 .dark {
@@ -68,6 +86,25 @@ body {
 :focus-visible {
   outline: 2px solid var(--focus);
   outline-offset: 2px;
+}
+
+/* 120 FPS Hardware Acceleration Rules */
+.gpu-accel {
+  will-change: transform, opacity;
+  transform: translate3d(0, 0, 0);
+  backface-visibility: hidden;
+  perspective: 1000px;
+}
+
+.type-mask {
+  overflow: hidden;
+  display: block;
+}
+
+/* Glassmorphism utilities from blueprints */
+.glass-pill {
+  backdrop-filter: blur(var(--glass-blur));
+  -webkit-backdrop-filter: blur(var(--glass-blur));
 }
 
 /* Fine pointer halo */

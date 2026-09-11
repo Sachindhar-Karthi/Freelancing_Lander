@@ -1,6 +1,7 @@
 import { Navigation } from "@/components/blocks/navigation";
 import { HeroSection } from "@/components/blocks/hero-section";
 import { CapabilityStrip } from "@/components/blocks/capability-strip";
+import { IntelligentPerformance } from "@/components/blocks/intelligent-performance";
 import { ProjectShowcase } from "@/components/blocks/project-showcase";
 import { ServicesSection } from "@/components/blocks/services-section";
 import { ProcessSection } from "@/components/blocks/process-section";
@@ -21,6 +22,7 @@ export default function Home() {
         <Navigation />
         <HeroSection />
         <CapabilityStrip />
+        <IntelligentPerformance />
         <ProjectShowcase />
         <ServicesSection />
         <ProcessSection />
