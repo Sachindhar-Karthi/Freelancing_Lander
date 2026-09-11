@@ -6,7 +6,7 @@ import { cn } from "@/lib/utils";
 
 export function BentoGrid() {
   return (
-    <div className="container mx-auto flex flex-col px-6 py-20 md:py-28 justify-center relative z-10 bg-[var(--background)] border-b border-[var(--border)]" id="capabilities">
+    <div className="container mx-auto flex flex-col px-6 py-20 md:py-28 justify-center relative z-20 bg-[var(--background)]/30 backdrop-blur-lg border-b border-[var(--border)]" id="capabilities">
       <motion.div
         initial={{ opacity: 0, y: 16 }}
         whileInView={{ opacity: 1, y: 0 }}

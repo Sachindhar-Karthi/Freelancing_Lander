@@ -39,7 +39,7 @@ const trustCommitments: TrustItem[] = [
 
 export function TrustSection() {
   return (
-    <section className="py-20 md:py-28 px-6 bg-[var(--surface)] border-b border-[var(--border)]" id="trust">
+    <section className="py-20 md:py-28 px-6 bg-[var(--surface)]/30 backdrop-blur-lg border-b border-[var(--border)] relative z-20" id="trust">
       <div className="max-w-screen-xl mx-auto">
         <div className="max-w-3xl mb-16">
           <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-[var(--accent-soft)] border border-[var(--border)] text-[var(--foreground)] font-mono text-xs font-semibold mb-3">
