@@ -2,8 +2,9 @@
 
 import { useEffect, useState, useRef } from "react";
 import { useTheme } from "next-themes";
-import { Sun, Moon, Laptop, ChevronDown, Check } from "lucide-react";
+import { Sun, Moon, Laptop, Check } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
+import { MOTION_EASE } from "@/lib/motion";
 
 export function ThemeToggle({ isMobile = false }: { isMobile?: boolean }) {
   const { theme, setTheme } = useTheme();
@@ -12,7 +13,8 @@ export function ThemeToggle({ isMobile = false }: { isMobile?: boolean }) {
   const menuRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
-    setMounted(true);
+    const raf = requestAnimationFrame(() => setMounted(true));
+    return () => cancelAnimationFrame(raf);
   }, []);
 
   // Close dropdown on outside click or Escape key
@@ -94,7 +96,7 @@ export function ThemeToggle({ isMobile = false }: { isMobile?: boolean }) {
             initial={{ opacity: 0, rotate: -30, scale: 0.8 }}
             animate={{ opacity: 1, rotate: 0, scale: 1 }}
             exit={{ opacity: 0, rotate: 30, scale: 0.8 }}
-            transition={{ duration: 0.18, ease: "easeOut" }}
+            transition={{ duration: 0.18, ease: MOTION_EASE }}
           >
             {theme === "light" && <Sun className="w-4 h-4 text-[var(--foreground)]" />}
             {theme === "dark" && <Moon className="w-4 h-4 text-[var(--accent)]" />}
@@ -110,7 +112,7 @@ export function ThemeToggle({ isMobile = false }: { isMobile?: boolean }) {
             initial={{ opacity: 0, scale: 0.95, y: 6 }}
             animate={{ opacity: 1, scale: 1, y: 0 }}
             exit={{ opacity: 0, scale: 0.95, y: 6 }}
-            transition={{ duration: 0.16, ease: [0.16, 1, 0.3, 1] }}
+            transition={{ duration: 0.18, ease: MOTION_EASE }}
             className="absolute right-0 mt-2 w-40 rounded-xl bg-[var(--surface)] border border-[var(--border)] shadow-xl p-1.5 z-50 text-[var(--foreground)]"
             role="menu"
             aria-orientation="vertical"

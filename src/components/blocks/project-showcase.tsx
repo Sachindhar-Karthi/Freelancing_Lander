@@ -5,11 +5,22 @@ import { motion, AnimatePresence } from "framer-motion";
 import { ArrowUpRight, Search, Sparkles } from "lucide-react";
 import Image from "next/image";
 import { sampleProjects, PROJECT_CATEGORIES, type Project, type ProjectCategory } from "@/data/projects";
+import { cn } from "@/lib/utils";
+import { MOTION_EASE, SPRING_INDICATOR } from "@/lib/motion";
 import { ProjectModal } from "./project-modal";
 import { CommandMenu } from "./command-menu";
 
-export function ProjectShowcase() {
-  const [activeCategory, setActiveCategory] = useState<ProjectCategory>("All");
+export interface ProjectShowcaseProps extends React.HTMLAttributes<HTMLElement> {
+  className?: string;
+  initialCategory?: ProjectCategory;
+}
+
+export function ProjectShowcase({
+  className,
+  initialCategory = "All",
+  ...props
+}: ProjectShowcaseProps = {}) {
+  const [activeCategory, setActiveCategory] = useState<ProjectCategory>(initialCategory);
   const [selectedProject, setSelectedProject] = useState<Project | null>(null);
   const [isCmdOpen, setIsCmdOpen] = useState(false);
 
@@ -24,8 +35,12 @@ export function ProjectShowcase() {
   return (
     <>
       <section 
-        className="relative py-20 md:py-28 px-6 bg-[var(--surface-muted)]/30 backdrop-blur-lg border-b border-[var(--border)] z-20" 
+        className={cn(
+          "relative py-20 md:py-28 px-6 bg-[var(--surface-muted)]/30 backdrop-blur-lg border-b border-[var(--border)] z-20",
+          className
+        )} 
         id="work"
+        {...props}
       >
         <div className="max-w-screen-xl mx-auto">
           {/* Section Header */}
@@ -33,7 +48,7 @@ export function ProjectShowcase() {
             <div className="max-w-2xl">
               <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-[var(--accent-soft)] border border-[var(--border)] text-[var(--foreground)] font-mono text-xs font-semibold mb-3">
                 <Sparkles className="w-3.5 h-3.5 text-[var(--accent)]" />
-                <span>// Selected Works & Case Studies</span>
+                <span>{"// Selected Works & Case Studies"}</span>
               </div>
               <h2 className="text-3xl sm:text-4xl md:text-5xl font-semibold tracking-tight text-[var(--foreground)] mb-3">
                 Crafted for performance & utility.
@@ -46,6 +61,8 @@ export function ProjectShowcase() {
             {/* Quick Command Menu Trigger */}
             <div className="shrink-0">
               <button
+                type="button"
+                aria-label="Open command palette"
                 onClick={() => setIsCmdOpen(true)}
                 className="inline-flex items-center gap-2 px-4 py-2.5 rounded-full bg-[var(--surface)] border border-[var(--border)] hover:border-[var(--accent)] text-sm font-medium text-[var(--foreground)] transition-colors shadow-xs active:scale-[0.98]"
               >
@@ -59,16 +76,18 @@ export function ProjectShowcase() {
           </div>
 
           {/* Project Filter Chips */}
-          <div className="flex items-center gap-2 overflow-x-auto pb-4 mb-10 scrollbar-none">
+          <div className="flex items-center gap-2 overflow-x-auto pb-4 mb-10 scrollbar-none -mx-6 px-6 sm:mx-0 sm:px-0">
             {PROJECT_CATEGORIES.map((cat) => {
               const isSelected = activeCategory === cat;
               return (
                 <button
                   key={cat}
+                  type="button"
+                  aria-pressed={isSelected}
                   onClick={() => setActiveCategory(cat)}
-                  className={`relative px-4 py-2 rounded-full text-xs font-mono font-medium transition-colors whitespace-nowrap ${
+                  className={`relative px-4 py-2 rounded-full text-xs font-mono font-medium transition-colors whitespace-nowrap shrink-0 ${
                     isSelected
-                      ? "text-[var(--foreground)]"
+                      ? "text-[var(--accent-foreground)]"
                       : "text-[var(--foreground-muted)] hover:text-[var(--foreground)] bg-[var(--surface)]/60 border border-[var(--border)]"
                   }`}
                 >
@@ -76,7 +95,7 @@ export function ProjectShowcase() {
                     <motion.div
                       layoutId="activeProjectFilter"
                       className="absolute inset-0 rounded-full bg-[var(--accent)]"
-                      transition={{ type: "spring", stiffness: 450, damping: 35 }}
+                      transition={SPRING_INDICATOR}
                     />
                   )}
                   <span className="relative z-10 font-semibold">{cat}</span>
@@ -95,60 +114,78 @@ export function ProjectShowcase() {
                 className="group relative rounded-2xl overflow-hidden bg-[var(--surface)] border border-[var(--border)] shadow-sm hover:border-[var(--accent)] hover:shadow-md transition-all duration-200 grid grid-cols-1 lg:grid-cols-12 gap-0"
               >
                 {/* Visual Preview */}
-                <div className="lg:col-span-7 relative h-64 sm:h-80 lg:h-auto min-h-[300px] overflow-hidden bg-[var(--surface-muted)] border-b lg:border-b-0 lg:border-r border-[var(--border)]">
+                <div className="lg:col-span-7 relative h-64 sm:h-80 lg:h-auto min-h-[260px] sm:min-h-[300px] overflow-hidden bg-[var(--surface-muted)] border-b lg:border-b-0 lg:border-r border-[var(--border)]">
                   <Image
                     src={featuredProject.image}
                     alt={featuredProject.title}
                     fill
-                    priority
-                    className="object-cover transition-transform duration-500 group-hover:scale-[1.02]"
+                    className="object-cover group-hover:scale-105 transition-transform duration-500"
                     sizes="(max-width: 1024px) 100vw, 60vw"
                   />
-                  <div className="absolute top-4 left-4 flex gap-2">
-                    <span className="px-2.5 py-1 rounded-full bg-[var(--surface)]/90 backdrop-blur-xs border border-[var(--border)] text-[11px] font-mono font-semibold text-[var(--foreground)]">
-                      Featured Study
+                  <div className="absolute top-4 left-4 z-10 flex gap-2">
+                    <span className="px-3 py-1 rounded-full bg-[var(--surface)]/90 backdrop-blur-md text-[var(--foreground)] border border-[var(--border)] text-xs font-mono font-semibold">
+                      {featuredProject.category}
                     </span>
-                    <span className="px-2.5 py-1 rounded-full bg-[var(--accent-soft)] text-[var(--foreground)] border border-[var(--border)] text-[11px] font-mono font-medium">
+                    <span className="px-2.5 py-1 rounded-full bg-[var(--surface)]/90 backdrop-blur-md text-[var(--foreground-muted)] border border-[var(--border)] text-xs font-mono">
                       {featuredProject.status}
                     </span>
                   </div>
                 </div>
 
-                {/* Content Side */}
-                <div className="lg:col-span-5 p-6 sm:p-8 lg:p-10 flex flex-col justify-between">
+                {/* Narrative Context */}
+                <div className="lg:col-span-5 p-6 sm:p-8 flex flex-col justify-between">
                   <div>
-                    <div className="inline-block px-3 py-1 rounded-full bg-[var(--surface-muted)] text-[var(--foreground-muted)] font-mono text-xs font-semibold mb-3 border border-[var(--border)]">
-                      {featuredProject.category}
+                    <div className="flex items-center gap-2 text-xs font-mono text-[var(--foreground-muted)] mb-3">
+                      <span>Featured Case Study</span>
+                      <span>•</span>
+                      <span>{featuredProject.role}</span>
                     </div>
-                    <h3 className="text-2xl sm:text-3xl font-semibold text-[var(--foreground)] mb-3">
+
+                    <h3 className="text-2xl sm:text-3xl font-semibold tracking-tight text-[var(--foreground)] mb-3">
                       {featuredProject.title}
                     </h3>
-                    <p className="text-[var(--foreground-muted)] text-sm sm:text-base font-normal leading-relaxed mb-6">
-                      {featuredProject.challenge}
+
+                    <p className="text-sm text-[var(--foreground-muted)] leading-relaxed mb-6">
+                      {featuredProject.summary}
                     </p>
 
-                    {/* Deliverables / Tools */}
-                    <div className="space-y-2 mb-6">
-                      <span className="text-xs font-mono font-semibold uppercase tracking-wider text-[var(--foreground-muted)] block">
-                        Key Stack & Scope
-                      </span>
-                      <div className="flex flex-wrap gap-1.5">
-                        {featuredProject.tools.map((t, i) => (
-                          <span key={i} className="text-xs font-mono px-2.5 py-1 rounded-md bg-[var(--surface-muted)] border border-[var(--border)] text-[var(--foreground)]">
-                            {t}
-                          </span>
-                        ))}
+                    <div className="space-y-4 mb-6">
+                      <div>
+                        <h4 className="text-xs font-mono uppercase tracking-wider text-[var(--foreground-muted)] mb-1.5">
+                          Engineering Challenge
+                        </h4>
+                        <p className="text-xs text-[var(--foreground)] leading-relaxed">
+                          {featuredProject.challenge}
+                        </p>
+                      </div>
+
+                      <div>
+                        <h4 className="text-xs font-mono uppercase tracking-wider text-[var(--foreground-muted)] mb-1.5">
+                          Core Stack
+                        </h4>
+                        <div className="flex flex-wrap gap-1.5">
+                          {featuredProject.tools.map((tool) => (
+                            <span
+                              key={`${featuredProject.id}-tool-${tool}`}
+                              className="text-xs font-mono px-2 py-0.5 rounded-md bg-[var(--surface-muted)] border border-[var(--border)] text-[var(--foreground)]"
+                            >
+                              {tool}
+                            </span>
+                          ))}
+                        </div>
                       </div>
                     </div>
                   </div>
 
-                  <div className="pt-4 border-t border-[var(--border)] flex items-center justify-between">
+                  <div className="pt-4 border-t border-[var(--border)] flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3">
                     <span className="text-xs font-mono text-[var(--foreground-muted)]">
                       {featuredProject.outcome}
                     </span>
                     <button
+                      type="button"
+                      aria-label={`Inspect case study for ${featuredProject.title}`}
                       onClick={() => setSelectedProject(featuredProject)}
-                      className="inline-flex items-center gap-1.5 text-xs font-semibold text-[var(--foreground)] bg-[var(--accent)] hover:bg-[var(--accent-hover)] px-4 py-2.5 rounded-full transition-all shadow-xs active:scale-[0.98]"
+                      className="inline-flex items-center gap-1.5 text-xs font-semibold text-[var(--accent-foreground)] bg-[var(--accent)] hover:bg-[var(--accent-hover)] px-4 py-2.5 rounded-full transition-all shadow-xs active:scale-[0.98] shrink-0"
                     >
                       <span>Inspect Case Study</span>
                       <ArrowUpRight className="w-3.5 h-3.5" />
@@ -167,7 +204,7 @@ export function ProjectShowcase() {
                     initial={{ opacity: 0, y: 12 }}
                     animate={{ opacity: 1, y: 0 }}
                     exit={{ opacity: 0, scale: 0.98 }}
-                    transition={{ duration: 0.2 }}
+                    transition={{ duration: 0.24, ease: MOTION_EASE }}
                     key={project.id}
                     className="group relative rounded-2xl overflow-hidden bg-[var(--surface)] border border-[var(--border)] shadow-xs hover:border-[var(--accent)] hover:shadow-md transition-all duration-200 flex flex-col justify-between"
                   >
@@ -200,8 +237,8 @@ export function ProjectShowcase() {
                           {project.summary}
                         </p>
                         <div className="flex flex-wrap gap-1 mb-4">
-                          {project.tools.slice(0, 3).map((tool, i) => (
-                            <span key={i} className="text-[11px] font-mono text-[var(--foreground-muted)] bg-[var(--surface-muted)] px-2 py-0.5 rounded border border-[var(--border)]">
+                          {project.tools.slice(0, 3).map((tool) => (
+                            <span key={`${project.id}-tool-${tool}`} className="text-[11px] font-mono text-[var(--foreground-muted)] bg-[var(--surface-muted)] px-2 py-0.5 rounded border border-[var(--border)]">
                               {tool}
                             </span>
                           ))}
@@ -209,13 +246,15 @@ export function ProjectShowcase() {
                       </div>
                     </div>
 
-                    <div className="p-6 pt-0 flex items-center justify-between border-t border-[var(--border)]/60 mt-auto">
-                      <span className="text-[11px] font-mono text-[var(--foreground-muted)]">
+                    <div className="p-6 pt-0 flex items-center justify-between border-t border-[var(--border)]/60 mt-auto gap-2">
+                      <span className="text-[11px] font-mono text-[var(--foreground-muted)] truncate">
                         {project.outcome}
                       </span>
                       <button
+                        type="button"
+                        aria-label={`View details for ${project.title}`}
                         onClick={() => setSelectedProject(project)}
-                        className="inline-flex items-center gap-1 text-xs font-semibold text-[var(--foreground)] hover:text-[var(--accent)] pt-3 transition-colors active:scale-[0.98]"
+                        className="inline-flex items-center gap-1 text-xs font-semibold text-[var(--foreground)] hover:text-[var(--accent)] pt-3 transition-colors active:scale-[0.98] shrink-0"
                       >
                         <span>View Details</span>
                         <ArrowUpRight className="w-3.5 h-3.5" />

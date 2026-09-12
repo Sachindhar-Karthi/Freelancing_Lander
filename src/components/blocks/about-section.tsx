@@ -1,6 +1,5 @@
 "use client";
 
-import { motion } from "framer-motion";
 import { User, Target, Compass, Sparkles } from "lucide-react";
 
 export function AboutSection() {
@@ -11,7 +10,7 @@ export function AboutSection() {
           {/* Left Column: Positioning & Philosophy */}
           <div className="lg:col-span-7">
             <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-[var(--accent-soft)] border border-[var(--border)] text-[var(--foreground)] font-mono text-xs font-semibold mb-4">
-              <span>// About the Freelancer</span>
+              <span>{"// Who I Am"}</span>
             </div>
             <h2 className="text-3xl sm:text-4xl md:text-5xl font-semibold tracking-tight text-[var(--foreground)] mb-6 leading-tight">
               An independent engineer & designer bridging code and aesthetic rigor.

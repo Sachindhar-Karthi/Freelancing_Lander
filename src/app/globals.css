@@ -7,12 +7,13 @@
   --surface-elevated: #FFFFFF;
   --surface-muted: #EEF3F7;
   --foreground: #111827;
-  --foreground-muted: #596579;
+  --foreground-muted: #475569;
   --border: #DCE2E8;
   --accent: #98F238;
   --accent-hover: #86E52B;
   --accent-soft: #E8FFD0;
-  --focus: #5F921D;
+  --accent-foreground: #0A0F1D;
+  --focus: #467013;
 
   /* Fluid Sizing & Spacing Tokens from relay_1.txt & relay_2.txt */
   --card-ref-w: 429;
@@ -45,6 +46,7 @@
   --accent: #F59E42;
   --accent-hover: #FFAD55;
   --accent-soft: #382315;
+  --accent-foreground: #0A0F1D;
   --focus: #FFB15A;
 }
 
@@ -59,6 +61,7 @@
   --color-accent: var(--accent);
   --color-accent-hover: var(--accent-hover);
   --color-accent-soft: var(--accent-soft);
+  --color-accent-foreground: var(--accent-foreground);
   --color-focus: var(--focus);
   --font-sans: var(--font-geist-sans);
   --font-mono: var(--font-geist-mono);
@@ -122,7 +125,7 @@ body {
     opacity: 0.18;
     pointer-events: none;
     z-index: 9999;
-    transition: width 0.15s ease-out, height 0.15s ease-out, margin 0.15s ease-out, opacity 0.15s ease-out;
+    transition: width 0.2s cubic-bezier(0.16, 1, 0.3, 1), height 0.2s cubic-bezier(0.16, 1, 0.3, 1), margin 0.2s cubic-bezier(0.16, 1, 0.3, 1), opacity 0.2s cubic-bezier(0.16, 1, 0.3, 1);
     transform: translate3d(-100px, -100px, 0);
   }
 

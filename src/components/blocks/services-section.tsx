@@ -3,6 +3,7 @@
 import { motion } from "framer-motion";
 import { Check, ArrowRight, Layers, Code, Box, Gauge } from "lucide-react";
 import Link from "next/link";
+import { MOTION_EASE } from "@/lib/motion";
 
 interface ServiceItem {
   number: string;
@@ -131,7 +132,7 @@ export function ServicesSection() {
         {/* Section Header */}
         <div className="max-w-3xl mb-16">
           <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-[var(--accent-soft)] border border-[var(--border)] text-[var(--foreground)] font-mono text-xs font-semibold mb-3">
-            <span>// Engineering & Architectural Services</span>
+            <span>{"// Engineering & Architectural Services"}</span>
           </div>
           <h2 className="text-3xl sm:text-4xl md:text-5xl font-semibold tracking-tight text-[var(--foreground)] mb-4">
             Direct collaboration. Measurable engineering outcomes.
@@ -147,7 +148,7 @@ export function ServicesSection() {
             <motion.div
               key={service.number}
               whileHover={{ y: -2 }}
-              transition={{ duration: 0.15 }}
+              transition={{ duration: 0.2, ease: MOTION_EASE }}
               className="p-6 sm:p-8 rounded-2xl bg-[var(--surface)] border border-[var(--border)] shadow-xs hover:border-[var(--accent)] hover:shadow-md transition-all flex flex-col justify-between"
             >
               <div>
@@ -219,7 +220,7 @@ export function ServicesSection() {
               <div className="pt-4 border-t border-[var(--border)]">
                 <Link
                   href="#contact"
-                  className="w-full inline-flex items-center justify-center gap-2 py-2.5 px-4 rounded-xl bg-[var(--surface-muted)] hover:bg-[var(--accent)] hover:text-[var(--foreground)] text-[var(--foreground)] text-xs font-semibold font-mono border border-[var(--border)] transition-colors active:scale-[0.98]"
+                  className="w-full inline-flex items-center justify-center gap-2 py-2.5 px-4 rounded-xl bg-[var(--surface-muted)] hover:bg-[var(--accent)] hover:text-[var(--accent-foreground)] text-[var(--foreground)] text-xs font-semibold font-mono border border-[var(--border)] transition-colors active:scale-[0.98]"
                 >
                   <span>{service.ctaText}</span>
                   <ArrowRight className="w-3.5 h-3.5" />

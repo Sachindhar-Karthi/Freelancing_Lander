@@ -2,13 +2,14 @@
 
 import { useState, useEffect, useRef } from "react";
 import Link from "next/link";
-import { Menu, X, Search, ArrowRight, Sparkles } from "lucide-react";
+import { Menu, X, Search, ArrowRight } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
 import { ThemeToggle } from "@/components/ui/theme-toggle";
 import { MagneticButton } from "@/components/ui/magnetic-button";
 import { CommandMenu } from "./command-menu";
 import { ProjectModal } from "./project-modal";
 import type { Project } from "@/data/projects";
+import { SPRING_INDICATOR } from "@/lib/motion";
 
 const NAV_LINKS = [
   { href: "#work", label: "Work", id: "work" },
@@ -95,11 +96,10 @@ export function Navigation() {
   return (
     <>
       <header
-        className={`fixed top-0 left-0 right-0 z-40 transition-colors duration-200 ${
-          isScrolled
-            ? "bg-[var(--surface)]/90 backdrop-blur-md border-b border-[var(--border)] shadow-xs"
-            : "bg-transparent border-b border-transparent"
-        }`}
+        className={`fixed top-0 left-0 right-0 z-40 transition-colors duration-200 ${isScrolled
+          ? "bg-[var(--surface)]/90 backdrop-blur-md border-b border-[var(--border)] shadow-xs"
+          : "bg-transparent border-b border-transparent"
+          }`}
       >
         <div className="max-w-screen-xl mx-auto px-6 h-18 sm:h-20 flex items-center justify-between">
           {/* Studio Identity */}
@@ -108,7 +108,7 @@ export function Navigation() {
             className="text-[var(--foreground)] font-semibold text-xl tracking-tight flex items-center gap-1 hover:opacity-85 transition-opacity"
             aria-label="Studio Home"
           >
-            <span>Studio</span>
+            <span>Amal Agency</span>
             <span className="w-2 h-2 rounded-full bg-[var(--accent)] inline-block" />
           </Link>
 
@@ -120,17 +120,16 @@ export function Navigation() {
                 <Link
                   key={link.id}
                   href={link.href}
-                  className={`relative px-4 py-1.5 rounded-full text-xs font-medium transition-colors ${
-                    isActive
-                      ? "text-[var(--foreground)]"
-                      : "text-[var(--foreground-muted)] hover:text-[var(--foreground)]"
-                  }`}
+                  className={`relative px-4 py-1.5 rounded-full text-xs font-medium transition-colors ${isActive
+                    ? "text-[var(--foreground)]"
+                    : "text-[var(--foreground-muted)] hover:text-[var(--foreground)]"
+                    }`}
                 >
                   {isActive && (
                     <motion.div
                       layoutId="activeNavIndicator"
                       className="absolute inset-0 rounded-full bg-[var(--surface)] shadow-2xs border border-[var(--border)]"
-                      transition={{ type: "spring", stiffness: 450, damping: 35 }}
+                      transition={SPRING_INDICATOR}
                     />
                   )}
                   <span className="relative z-10">{link.label}</span>
@@ -157,12 +156,25 @@ export function Navigation() {
             {/* Theme Toggle Dropdown */}
             <ThemeToggle />
 
+            {/* Source Link with rel="noopener noreferrer" */}
+            <a
+              href="https://github.com/Sachindhar-Karthi"
+              target="_blank"
+              rel="noopener noreferrer"
+              aria-label="View source on GitHub"
+              className="p-2.5 rounded-full bg-[var(--surface)] border border-[var(--border)] hover:border-[var(--accent)] text-[var(--foreground-muted)] hover:text-[var(--foreground)] transition-colors shadow-2xs active:scale-[0.98] flex items-center justify-center"
+            >
+              <svg className="w-3.5 h-3.5" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
+                <path fillRule="evenodd" clipRule="evenodd" d="M12 2C6.477 2 2 6.484 2 12.017c0 4.425 2.865 8.18 6.839 9.504.5.092.682-.217.682-.483 0-.237-.008-.868-.013-1.703-2.782.605-3.369-1.343-3.369-1.343-.454-1.158-1.11-1.466-1.11-1.466-.908-.62.069-.608.069-.608 1.003.07 1.53 1.032 1.53 1.032.892 1.53 2.341 1.088 2.91.832.092-.647.35-1.088.636-1.338-2.22-.253-4.555-1.113-4.555-4.951 0-1.093.39-1.988 1.029-2.688-.103-.253-.446-1.272.098-2.65 0 0 .84-.27 2.75 1.026A9.564 9.564 0 0112 6.844c.85.004 1.705.115 2.504.337 1.909-1.296 2.747-1.027 2.747-1.027.546 1.379.202 2.398.1 2.651.64.7 1.028 1.595 1.028 2.688 0 3.848-2.339 4.695-4.566 4.943.359.309.678.92.678 1.855 0 1.338-.012 2.419-.012 2.747 0 .268.18.58.688.482A10.019 10.019 0 0022 12.017C22 6.484 17.522 2 12 2z" />
+              </svg>
+            </a>
+
             {/* Contact CTA with Magnetic Hover Effect */}
             <MagneticButton
               href="#contact"
               strength={0.24}
               textStrength={0.12}
-              className="text-xs font-semibold text-[var(--foreground)] bg-[var(--accent)] hover:bg-[var(--accent-hover)] px-4 py-2.5 rounded-full transition-colors shadow-xs"
+              className="text-xs font-semibold text-[var(--accent-foreground)] bg-[var(--accent)] hover:bg-[var(--accent-hover)] px-4 py-2.5 rounded-full transition-colors shadow-xs"
             >
               <span>Get in touch</span>
             </MagneticButton>
@@ -244,10 +256,29 @@ export function Navigation() {
               <Link
                 href="#contact"
                 onClick={() => setIsOpen(false)}
-                className="w-full text-center block py-3 rounded-full bg-[var(--accent)] text-[var(--foreground)] font-semibold text-sm active:scale-[0.98] shadow-xs"
+                className="w-full text-center block py-3 rounded-full bg-[var(--accent)] text-[var(--accent-foreground)] font-semibold text-sm active:scale-[0.98] shadow-xs"
               >
                 Get in touch
               </Link>
+              <div className="flex items-center justify-center gap-4 text-xs font-mono text-[var(--foreground-muted)]">
+                <a
+                  href="https://github.com/Sachindhar-Karthi/Freelancing_lander"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="hover:text-[var(--foreground)] transition-colors"
+                >
+                  GitHub
+                </a>
+                <span>•</span>
+                <a
+                  href="https://linkedin.com"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="hover:text-[var(--foreground)] transition-colors"
+                >
+                  LinkedIn
+                </a>
+              </div>
               <div className="text-center text-xs font-mono text-[var(--foreground-muted)]">
                 © {new Date().getFullYear()} Studio. Engineered with precision.
               </div>

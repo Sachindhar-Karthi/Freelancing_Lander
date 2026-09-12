@@ -2,6 +2,7 @@
 
 import { motion } from "framer-motion";
 import { Search, FileCode, Palette, Code2, CheckCircle2, Rocket } from "lucide-react";
+import { MOTION_EASE } from "@/lib/motion";
 
 interface Stage {
   number: string;
@@ -62,7 +63,7 @@ export function ProcessSection() {
       <div className="max-w-screen-xl mx-auto">
         <div className="max-w-3xl mb-16">
           <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-[var(--accent-soft)] border border-[var(--border)] text-[var(--foreground)] font-mono text-xs font-semibold mb-3">
-            <span>// 6-Stage Working Process</span>
+            <span>{"// 6-Stage Working Process"}</span>
           </div>
           <h2 className="text-3xl sm:text-4xl md:text-5xl font-semibold tracking-tight text-[var(--foreground)] mb-4">
             Predictable sprints. Zero surprises.
@@ -77,7 +78,7 @@ export function ProcessSection() {
             <motion.div
               key={stage.number}
               whileHover={{ y: -2 }}
-              transition={{ duration: 0.15 }}
+              transition={{ duration: 0.2, ease: MOTION_EASE }}
               className="p-6 rounded-2xl bg-[var(--surface-muted)] border border-[var(--border)] flex flex-col justify-between"
             >
               <div>

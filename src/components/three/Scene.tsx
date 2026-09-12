@@ -1,6 +1,6 @@
 "use client";
 
-import { Suspense, useEffect, useRef, useState } from "react";
+import { Suspense, useEffect, useMemo, useRef, useState } from "react";
 import { Canvas, useFrame, useThree } from "@react-three/fiber";
 import { Float } from "@react-three/drei";
 import { Particles } from "./Particles";
@@ -9,28 +9,23 @@ import * as THREE from "three";
 import gsap from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
 
-function CameraRig() {
-  const { camera } = useThree();
+import { usePrefersReducedMotion } from "@/lib/motion";
+
+function CameraRig({ reducedMotion }: { reducedMotion: boolean }) {
+  const scrollTarget = useRef({ y: 0, z: 5.5, rotX: 0 });
   
   useEffect(() => {
+    if (reducedMotion) return;
+
     gsap.registerPlugin(ScrollTrigger);
     
     const ctx = gsap.context(() => {
-      // Cinematic camera movement based on scroll
-      gsap.to(camera.position, {
+      // Cinematic camera movement based on scroll mapped to target values
+      // Eliminates race conditions between GSAP and useFrame pointer parallax
+      gsap.to(scrollTarget.current, {
         z: 8,
         y: -1.5,
-        ease: "none",
-        scrollTrigger: {
-          trigger: "body",
-          start: "top top",
-          end: "bottom bottom",
-          scrub: 0.3,
-        },
-      });
-      
-      gsap.to(camera.rotation, {
-        x: 0.15,
+        rotX: 0.15,
         ease: "none",
         scrollTrigger: {
           trigger: "body",
@@ -42,19 +37,34 @@ function CameraRig() {
     });
 
     return () => ctx.revert();
-  }, [camera]);
+  }, [reducedMotion]);
 
   useFrame((state) => {
-    // Subtle mouse parallax at 120 FPS
-    state.camera.position.x += (state.pointer.x * 0.3 - state.camera.position.x) * 0.04;
-    state.camera.position.y += (state.pointer.y * 0.3 - state.camera.position.y) * 0.04;
+    // When prefers-reduced-motion is active, lock camera to neutral resting position
+    // with zero pointer parallax or scroll zooming
+    if (reducedMotion) {
+      state.camera.position.x += (0 - state.camera.position.x) * 0.08;
+      state.camera.position.y += (0 - state.camera.position.y) * 0.08;
+      state.camera.position.z += (5.5 - state.camera.position.z) * 0.08;
+      state.camera.lookAt(0, 0, 0);
+      return;
+    }
+
+    // Smooth lerp camera with combined scroll kinematics and subtle pointer parallax
+    const targetX = state.pointer.x * 0.28;
+    const targetY = scrollTarget.current.y + state.pointer.y * 0.22;
+    const targetZ = scrollTarget.current.z;
+
+    state.camera.position.x += (targetX - state.camera.position.x) * 0.04;
+    state.camera.position.y += (targetY - state.camera.position.y) * 0.04;
+    state.camera.position.z += (targetZ - state.camera.position.z) * 0.04;
     state.camera.lookAt(0, 0, 0);
   });
 
   return null;
 }
 
-function ModularCore() {
+function ModularCore({ reducedMotion }: { reducedMotion: boolean }) {
   const groupRef = useRef<THREE.Group>(null);
   const outerMeshRef = useRef<THREE.Mesh>(null);
   const coreMeshRef = useRef<THREE.Mesh>(null);
@@ -66,16 +76,23 @@ function ModularCore() {
   const targetX = isDesktop ? -viewport.width * 0.25 : 0;
 
   useFrame((_, delta) => {
-    timeRef.current += delta;
+    // Guard against delta spikes during tab reactivation
+    const safeDelta = Math.min(delta, 0.05);
+    timeRef.current += safeDelta;
     const t = timeRef.current;
-    if (outerMeshRef.current) {
-      outerMeshRef.current.rotation.x = Math.sin(t * 0.2) * 0.3;
-      outerMeshRef.current.rotation.y += 0.003;
+
+    // Halt continuous orbital rotation when reduced motion is preferred
+    if (!reducedMotion) {
+      if (outerMeshRef.current) {
+        outerMeshRef.current.rotation.x = Math.sin(t * 0.2) * 0.3;
+        outerMeshRef.current.rotation.y += 0.003;
+      }
+      if (coreMeshRef.current) {
+        coreMeshRef.current.rotation.y -= 0.006;
+        coreMeshRef.current.rotation.z = Math.cos(t * 0.3) * 0.2;
+      }
     }
-    if (coreMeshRef.current) {
-      coreMeshRef.current.rotation.y -= 0.006;
-      coreMeshRef.current.rotation.z = Math.cos(t * 0.3) * 0.2;
-    }
+
     if (groupRef.current) {
       // Smoothly interpolate position for responsiveness
       groupRef.current.position.x += (targetX - groupRef.current.position.x) * 0.05;
@@ -83,7 +100,11 @@ function ModularCore() {
   });
 
   return (
-    <Float speed={1.8} rotationIntensity={0.4} floatIntensity={0.8}>
+    <Float 
+      speed={reducedMotion ? 0 : 1.8} 
+      rotationIntensity={reducedMotion ? 0 : 0.4} 
+      floatIntensity={reducedMotion ? 0 : 0.8}
+    >
       <group ref={groupRef} position={[0, 0, -5]}>
         {/* Outer Matte Frost Shell */}
         <mesh ref={outerMeshRef} scale={2.8}>
@@ -130,44 +151,73 @@ function ModularCore() {
 
 export function Scene() {
   const containerRef = useRef<HTMLDivElement>(null);
+  const isVisibleRef = useRef(true);
   const [isVisible, setIsVisible] = useState(true);
   const [hasWebGL, setHasWebGL] = useState(true);
-  const [isMobile, setIsMobile] = useState(false);
+  const reducedMotion = usePrefersReducedMotion();
+  const [isMobile, setIsMobile] = useState(() => {
+    if (typeof window !== "undefined") {
+      return window.innerWidth < 768;
+    }
+    return false;
+  });
+
+  // Memoize stable Canvas configuration objects to prevent Canvas reconciler churn
+  const cameraConfig = useMemo(() => ({ position: [0, 0, 5.5] as [number, number, number], fov: 45 }), []);
+  const glConfig = useMemo(() => ({
+    alpha: true,
+    antialias: typeof window !== "undefined" ? window.innerWidth >= 768 : true,
+    powerPreference: "high-performance" as const,
+    precision: "mediump" as const,
+  }), []);
 
   useEffect(() => {
     // 1. Detect WebGL support
     try {
       const canvas = document.createElement("canvas");
       const gl = canvas.getContext("webgl") || canvas.getContext("experimental-webgl");
-      if (!gl) setHasWebGL(false);
+      if (!gl) {
+        requestAnimationFrame(() => setHasWebGL(false));
+      }
     } catch {
-      setHasWebGL(false);
+      requestAnimationFrame(() => setHasWebGL(false));
     }
 
-    // 2. Detect mobile viewport
-    const checkMobile = () => {
-      setIsMobile(window.innerWidth < 768);
+    // State-guarded visibility updater: avoids dispatching React re-renders unless value changes
+    const updateVisibility = (visible: boolean) => {
+      if (isVisibleRef.current !== visible) {
+        isVisibleRef.current = visible;
+        setIsVisible(visible);
+      }
     };
-    checkMobile();
+
+    // 2. Debounced mobile viewport check
+    let resizeTimer: ReturnType<typeof setTimeout> | null = null;
+    const checkMobile = () => {
+      if (resizeTimer) clearTimeout(resizeTimer);
+      resizeTimer = setTimeout(() => {
+        const mobile = window.innerWidth < 768;
+        setIsMobile((prev) => (prev !== mobile ? mobile : prev));
+      }, 150);
+    };
     window.addEventListener("resize", checkMobile);
 
     // 3. Tab visibility listener
     const handleVisibilityChange = () => {
-      setIsVisible(!document.hidden);
+      const active = !document.hidden && window.scrollY <= 1400;
+      updateVisibility(active);
     };
     document.addEventListener("visibilitychange", handleVisibilityChange);
 
     // 4. Scroll listener to pause rendering when scrolled past hero / top area
     const handleScroll = () => {
-      if (window.scrollY > 1400) {
-        setIsVisible(false);
-      } else if (!document.hidden) {
-        setIsVisible(true);
-      }
+      const active = !document.hidden && window.scrollY <= 1400;
+      updateVisibility(active);
     };
     window.addEventListener("scroll", handleScroll, { passive: true });
 
     return () => {
+      if (resizeTimer) clearTimeout(resizeTimer);
       window.removeEventListener("resize", checkMobile);
       document.removeEventListener("visibilitychange", handleVisibilityChange);
       window.removeEventListener("scroll", handleScroll);
@@ -188,13 +238,13 @@ export function Scene() {
   return (
     <div ref={containerRef} className="fixed inset-0 z-[-1] pointer-events-none bg-[var(--background)] transition-colors duration-200">
       <Canvas
-        camera={{ position: [0, 0, 5.5], fov: 45 }}
+        camera={cameraConfig}
         dpr={isMobile ? 1 : [1, 1.5]}
-        gl={{ alpha: true, antialias: !isMobile, powerPreference: "high-performance", precision: "mediump" }}
+        gl={glConfig}
         frameloop={isVisible ? "always" : "never"}
       >
         <Suspense fallback={null}>
-          <CameraRig />
+          <CameraRig reducedMotion={reducedMotion} />
           {/* Soft Studio Lighting */}
           <ambientLight intensity={0.8} />
           <directionalLight position={[10, 15, 10]} intensity={1.4} color="#FFFFFF" />
@@ -204,8 +254,8 @@ export function Scene() {
           {/* Fluid Abstract Terrain Shader reacting to cursor */}
           <FluidTerrain />
 
-          <ModularCore />
-          <Particles count={isMobile ? 100 : 350} />
+          <ModularCore reducedMotion={reducedMotion} />
+          <Particles count={isMobile ? 120 : 350} />
         </Suspense>
       </Canvas>
     </div>

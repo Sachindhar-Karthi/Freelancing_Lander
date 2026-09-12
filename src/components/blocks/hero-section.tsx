@@ -6,6 +6,7 @@ import { cn } from "@/lib/utils";
 import { ArrowUpRight, Sparkles } from "lucide-react";
 import gsap from "gsap";
 import { CustomEase } from "gsap/CustomEase";
+import { GSAP_CUSTOM_EASE_PATH, GSAP_CUSTOM_EASE_NAME } from "@/lib/motion";
 import { MagneticButton } from "@/components/ui/magnetic-button";
 
 interface HeroSectionProps extends React.HTMLAttributes<HTMLDivElement> {
@@ -17,42 +18,8 @@ interface HeroSectionProps extends React.HTMLAttributes<HTMLDivElement> {
   description?: string;
   ctaText?: string;
   ctaHref?: string;
-  gridOptions?: {
-    angle?: number;
-    cellSize?: number;
-    opacity?: number;
-    lineColor?: string;
-  };
 }
 
-const RetroGrid = ({
-  angle = 65,
-  cellSize = 55,
-  opacity = 0.35,
-  lineColor = "var(--border)",
-}) => {
-  const gridStyles = {
-    "--grid-angle": `${angle}deg`,
-    "--cell-size": `${cellSize}px`,
-    "--opacity": opacity,
-    "--grid-line": lineColor,
-  } as React.CSSProperties;
-
-  return (
-    <div
-      className={cn(
-        "pointer-events-none absolute size-full overflow-hidden [perspective:200px]",
-        `opacity-[var(--opacity)]`
-      )}
-      style={gridStyles}
-    >
-      <div className="absolute inset-0 [transform:rotateX(var(--grid-angle))]">
-        <div className="animate-grid [background-image:linear-gradient(to_right,var(--grid-line)_1px,transparent_0),linear-gradient(to_bottom,var(--grid-line)_1px,transparent_0)] [background-repeat:repeat] [background-size:var(--cell-size)_var(--cell-size)] [height:300vh] [inset:0%_0px] [margin-left:-200%] [transform-origin:100%_0_0] [width:600vw]" />
-      </div>
-      <div className="absolute inset-0 bg-gradient-to-t from-[var(--background)] via-[var(--background)]/80 to-transparent to-90%" />
-    </div>
-  );
-};
 
 const HeroSection = React.forwardRef<HTMLDivElement, HeroSectionProps>(
   (
@@ -63,15 +30,15 @@ const HeroSection = React.forwardRef<HTMLDivElement, HeroSectionProps>(
         regular: "Designing digital products ",
         highlight: "with clarity & precision.",
       },
-      description = "I am a creative developer & UI/UX designer blending clean architecture and human-centered motion to craft calm, award-winning software.",
+      description = "We are a group of creative developer & UI/UX designer blending clean architecture and human-centered motion to craft calm, award-winning software.",
       ctaText = "Explore selected work",
       ctaHref = "#work",
-      gridOptions,
       ...props
     },
     ref
   ) => {
     const rootRef = useRef<HTMLDivElement>(null);
+    React.useImperativeHandle(ref, () => rootRef.current as HTMLDivElement);
     const badgeRef = useRef<HTMLDivElement>(null);
     const line1Ref = useRef<HTMLSpanElement>(null);
     const line2Ref = useRef<HTMLSpanElement>(null);
@@ -80,16 +47,31 @@ const HeroSection = React.forwardRef<HTMLDivElement, HeroSectionProps>(
     const accentHighlightRef = useRef<HTMLSpanElement>(null);
 
     useEffect(() => {
-      // Register custom ease curve from relay_2.txt
+      // Register custom ease curve from motion tokens
       gsap.registerPlugin(CustomEase);
       try {
-        CustomEase.create("custom", "M0,0 C0.16,1 0.3,1 1,1");
+        CustomEase.create(GSAP_CUSTOM_EASE_NAME, GSAP_CUSTOM_EASE_PATH);
       } catch {
         // Fallback if already registered
       }
 
+      const isReducedMotion = typeof window !== "undefined" && window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+
       const ctx = gsap.context(() => {
-        const tl = gsap.timeline({ defaults: { ease: "custom" } });
+        if (isReducedMotion) {
+          if (badgeRef.current) gsap.set(badgeRef.current, { opacity: 1, y: 0, scale: 1 });
+          if (line1Ref.current) gsap.set(line1Ref.current, { y: "0%", opacity: 1 });
+          if (line2Ref.current) gsap.set(line2Ref.current, { y: "0%", opacity: 1 });
+          if (accentHighlightRef.current) gsap.set(accentHighlightRef.current, { scaleX: 1 });
+          if (descRef.current) gsap.set(descRef.current, { opacity: 1, y: 0 });
+          if (ctaRef.current) {
+            const targets = ctaRef.current.children.length > 0 ? ctaRef.current.children : ctaRef.current;
+            gsap.set(targets, { opacity: 1, y: 0 });
+          }
+          return;
+        }
+
+        const tl = gsap.timeline({ defaults: { ease: GSAP_CUSTOM_EASE_NAME } });
 
         // Staggered sequence ported from relay_2.txt specifications
         // t = 0.18s: badge wipes in
@@ -127,7 +109,7 @@ const HeroSection = React.forwardRef<HTMLDivElement, HeroSectionProps>(
           tl.fromTo(
             accentHighlightRef.current,
             { scaleX: 0 },
-            { scaleX: 1, duration: 0.85, ease: "power2.out" },
+            { scaleX: 1, duration: 0.85, ease: GSAP_CUSTOM_EASE_NAME, transformOrigin: "left center" },
             0.70
           );
         }
@@ -142,12 +124,13 @@ const HeroSection = React.forwardRef<HTMLDivElement, HeroSectionProps>(
           );
         }
 
-        // t = 0.56s & 0.66s: CTA actions entrance
+        // t = 0.56s & 0.66s: CTA actions entrance (staggered entrance for CTA buttons)
         if (ctaRef.current) {
+          const targets = ctaRef.current.children.length > 0 ? ctaRef.current.children : ctaRef.current;
           tl.fromTo(
-            ctaRef.current,
+            targets,
             { opacity: 0, y: 14 },
-            { opacity: 1, y: 0, duration: 0.7 },
+            { opacity: 1, y: 0, duration: 0.7, stagger: 0.1 },
             0.56
           );
         }
@@ -157,70 +140,70 @@ const HeroSection = React.forwardRef<HTMLDivElement, HeroSectionProps>(
     }, []);
 
     return (
-      <div 
-        className={cn("relative min-h-[90vh] w-full flex items-center overflow-hidden pt-20", className)} 
-        ref={ref || rootRef} 
+      <div
+        className={cn("relative min-h-[90vh] w-full flex items-center overflow-hidden pt-20", className)}
+        ref={rootRef}
         {...props}
       >
         <section className="relative w-full z-10 pointer-events-none">
           <div className="max-w-screen-xl mx-auto px-6 py-20 md:py-32 grid grid-cols-1 lg:grid-cols-2 gap-12 items-center w-full">
-            
+
             {/* Left side empty for 3D centralized animation to show through clearly */}
             <div className="hidden lg:block"></div>
 
-            {/* Right side for Title and Text */}
-            <div className="space-y-8 max-w-xl mx-auto lg:mx-0 text-left pointer-events-auto">
-              
+            {/* Right side for Title and Text with responsive frosted container on mobile */}
+            <div className="space-y-6 sm:space-y-8 max-w-xl mx-auto lg:mx-0 text-left pointer-events-auto bg-[var(--background)]/75 lg:bg-transparent backdrop-blur-md lg:backdrop-blur-none p-5 sm:p-7 lg:p-0 rounded-2xl sm:rounded-3xl border border-[var(--border)]/60 lg:border-transparent">
+
               {/* Status Pill Badge */}
               <div className="w-fit" ref={badgeRef}>
-                <div 
+                <div
                   className="gpu-accel inline-flex items-center gap-2 text-xs font-mono font-medium text-[var(--foreground)] bg-[var(--surface)]/80 glass-pill border border-[var(--border)] px-4 py-2 rounded-full shadow-xs"
                 >
                   <span className="w-2 h-2 rounded-full bg-[var(--accent)] animate-pulse" />
                   <span>{title}</span>
                 </div>
               </div>
-              
+
               {/* Hero Headline */}
-              <h1 className="text-4xl sm:text-6xl md:text-7xl tracking-tight font-sans font-semibold text-[var(--foreground)] leading-[1.08]">
-                <span className="type-mask block">
+              <h1 className="text-3xl sm:text-5xl md:text-6xl lg:text-7xl tracking-tight font-sans font-semibold text-[var(--foreground)] leading-[1.12]">
+                <span className="type-mask block pb-1 -mb-1">
                   <span ref={line1Ref} className="gpu-accel inline-block">
-                    {subtitle.regular}
+                    {subtitle?.regular}
                   </span>
                 </span>
-                <span className="type-mask block">
+                <span className="type-mask block pb-1 -mb-1">
                   <span ref={line2Ref} className="gpu-accel inline-block relative">
-                    {subtitle.highlight}
-                    <span 
+                    {subtitle?.highlight}
+                    <span
                       ref={accentHighlightRef}
-                      className="absolute bottom-1 left-0 right-0 h-[6px] bg-[var(--accent)]/50 -z-10 rounded-xs origin-left" 
+                      className="absolute bottom-1 left-0 right-0 h-[6px] bg-[var(--accent)]/50 -z-10 rounded-xs origin-left"
                     />
                   </span>
                 </span>
               </h1>
-              
+
               {/* Description */}
-              <p ref={descRef} className="gpu-accel max-w-md text-base sm:text-lg text-[var(--foreground-muted)] font-normal leading-relaxed">
+              <p ref={descRef} className="gpu-accel max-w-md text-sm sm:text-base md:text-lg text-[var(--foreground-muted)] font-normal leading-relaxed">
                 {description}
               </p>
-              
+
               {/* Action Buttons */}
-              <div ref={ctaRef} className="pt-4 flex flex-col sm:flex-row items-start justify-start gap-4">
+              <div ref={ctaRef} className="pt-2 sm:pt-4 flex flex-col sm:flex-row items-stretch sm:items-center justify-start gap-3 sm:gap-4 w-full sm:w-auto">
                 <MagneticButton
                   href={ctaHref}
                   strength={0.28}
                   textStrength={0.14}
-                  className="rounded-full bg-[var(--accent)] hover:bg-[var(--accent-hover)] text-[var(--foreground)] px-8 py-4 text-sm font-semibold shadow-xs hover:shadow transition-shadow"
+                  className="w-full sm:w-auto rounded-full bg-[var(--accent)] hover:bg-[var(--accent-hover)] text-[var(--accent-foreground)] px-8 py-3.5 sm:py-4 text-sm font-semibold shadow-xs hover:shadow transition-shadow justify-center"
                 >
                   <span>{ctaText}</span>
-                  <ArrowUpRight className="w-4 h-4 text-[var(--foreground)]" />
+                  <ArrowUpRight className="w-4 h-4 text-[var(--accent-foreground)]" />
                 </MagneticButton>
 
                 <MagneticButton
                   href="#services"
                   strength={0.28}
                   textStrength={0.14}
-                  className="rounded-full bg-[var(--surface)] hover:bg-[var(--surface-muted)] border border-[var(--border)] text-[var(--foreground)] px-7 py-4 text-sm font-medium shadow-2xs transition-shadow"
+                  className="w-full sm:w-auto rounded-full bg-[var(--surface)] hover:bg-[var(--surface-muted)] border border-[var(--border)] text-[var(--foreground)] px-7 py-3.5 sm:py-4 text-sm font-medium shadow-2xs transition-shadow justify-center"
                 >
                   <Sparkles className="w-4 h-4 text-[var(--accent)]" />
                   <span>View Services</span>

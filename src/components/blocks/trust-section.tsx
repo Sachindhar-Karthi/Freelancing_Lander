@@ -2,6 +2,7 @@
 
 import { motion } from "framer-motion";
 import { GitBranch, Shield, MessagesSquare, KeyRound } from "lucide-react";
+import { MOTION_EASE } from "@/lib/motion";
 
 interface TrustItem {
   icon: React.ReactNode;
@@ -43,7 +44,7 @@ export function TrustSection() {
       <div className="max-w-screen-xl mx-auto">
         <div className="max-w-3xl mb-16">
           <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-[var(--accent-soft)] border border-[var(--border)] text-[var(--foreground)] font-mono text-xs font-semibold mb-3">
-            <span>// Trust & Collaboration Standards</span>
+            <span>{"// Trust & Collaboration Standards"}</span>
           </div>
           <h2 className="text-3xl sm:text-4xl md:text-5xl font-semibold tracking-tight text-[var(--foreground)] mb-4">
             Grounded in transparency. Proven in code.
@@ -58,7 +59,7 @@ export function TrustSection() {
             <motion.div
               key={idx}
               whileHover={{ y: -2 }}
-              transition={{ duration: 0.15 }}
+              transition={{ duration: 0.2, ease: MOTION_EASE }}
               className="p-8 rounded-2xl bg-[var(--surface-muted)] border border-[var(--border)] flex flex-col justify-between"
             >
               <div>

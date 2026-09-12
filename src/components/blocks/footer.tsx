@@ -11,7 +11,7 @@ export function Footer() {
   const [formData, setFormData] = useState({ name: "", email: "", message: "" });
 
   const handleCopyEmail = () => {
-    navigator.clipboard.writeText("hello@example.com");
+    navigator.clipboard.writeText("markschromeos@gmail.com");
     setCopied(true);
     setTimeout(() => setCopied(false), 2500);
   };
@@ -51,9 +51,9 @@ export function Footer() {
             </p>
 
             <div className="flex flex-wrap items-center gap-4 pt-4">
-              <a 
+              <a
                 href="mailto:hello@example.com"
-                className="inline-flex items-center gap-2 rounded-full bg-[var(--accent)] text-[var(--foreground)] hover:bg-[var(--accent-hover)] px-6 py-3 font-semibold text-sm transition-all shadow-xs active:scale-[0.98]"
+                className="inline-flex items-center gap-2 rounded-full bg-[var(--accent)] text-[var(--accent-foreground)] hover:bg-[var(--accent-hover)] px-6 py-3 font-semibold text-sm transition-all shadow-xs active:scale-[0.98]"
               >
                 <span>hello@example.com</span>
                 <ArrowUpRight className="w-4 h-4" />
@@ -138,7 +138,7 @@ export function Footer() {
 
                 <AnimatePresence>
                   {formStatus === "offline_error" && (
-                    <motion.div 
+                    <motion.div
                       initial={{ opacity: 0, y: -4 }}
                       animate={{ opacity: 1, y: 0 }}
                       className="p-3 rounded-xl bg-[var(--accent-soft)] border border-[var(--border)] text-xs font-mono text-[var(--foreground)] flex items-center gap-2"
@@ -149,7 +149,7 @@ export function Footer() {
                   )}
 
                   {formStatus === "success" && (
-                    <motion.div 
+                    <motion.div
                       initial={{ opacity: 0, y: -4 }}
                       animate={{ opacity: 1, y: 0 }}
                       className="p-3 rounded-xl bg-[var(--accent-soft)] border border-[var(--border)] text-xs font-mono text-[var(--foreground)] flex items-center gap-2"
@@ -163,7 +163,7 @@ export function Footer() {
                 <button
                   type="submit"
                   disabled={formStatus === "submitting"}
-                  className="w-full py-3 rounded-xl bg-[var(--accent)] hover:bg-[var(--accent-hover)] disabled:opacity-50 text-[var(--foreground)] font-semibold text-sm transition-all shadow-xs flex items-center justify-center gap-2 active:scale-[0.99]"
+                  className="w-full py-3 rounded-xl bg-[var(--accent)] hover:bg-[var(--accent-hover)] disabled:opacity-50 text-[var(--accent-foreground)] font-semibold text-sm transition-all shadow-xs flex items-center justify-center gap-2 active:scale-[0.99]"
                 >
                   <Send className="w-4 h-4" />
                   <span>{formStatus === "submitting" ? "Transmitting..." : "Send Direct Inquiry"}</span>
@@ -172,9 +172,9 @@ export function Footer() {
             </div>
           </div>
         </div>
-        
+
         {/* Landmark Links & Metadata */}
-        <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-8 border-t border-[var(--border)] pt-10 text-sm">
+        <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-5 gap-8 border-t border-[var(--border)] pt-10 text-sm">
           <div className="col-span-1 sm:col-span-2">
             <div className="flex items-center gap-1.5 font-semibold text-lg text-[var(--foreground)] mb-2">
               <span>Studio</span>
@@ -187,7 +187,7 @@ export function Footer() {
               © {new Date().getFullYear()} Studio. All rights reserved. Self-contained & offline-ready.
             </p>
           </div>
-          
+
           <div>
             <h4 className="text-[var(--foreground)] font-medium mb-3 text-xs font-mono uppercase tracking-wider">
               Navigation
@@ -200,7 +200,59 @@ export function Footer() {
               <li><Link href="#trust" className="hover:text-[var(--accent)] transition-colors">Trust & Standards</Link></li>
             </ul>
           </div>
-          
+
+          <div>
+            <h4 className="text-[var(--foreground)] font-medium mb-3 text-xs font-mono uppercase tracking-wider">
+              Connect
+            </h4>
+            <ul className="space-y-2 text-xs text-[var(--foreground-muted)]">
+              <li>
+                <a
+                  href="https://github.com/Sachindhar-Karthi/Freelancing_lander"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="hover:text-[var(--accent)] transition-colors inline-flex items-center gap-1"
+                >
+                  <span>GitHub</span>
+                  <ArrowUpRight className="w-3 h-3 text-[var(--foreground-muted)]" />
+                </a>
+              </li>
+              <li>
+                <a
+                  href="https://linkedin.com"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="hover:text-[var(--accent)] transition-colors inline-flex items-center gap-1"
+                >
+                  <span>LinkedIn</span>
+                  <ArrowUpRight className="w-3 h-3 text-[var(--foreground-muted)]" />
+                </a>
+              </li>
+              <li>
+                <a
+                  href="https://x.com"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="hover:text-[var(--accent)] transition-colors inline-flex items-center gap-1"
+                >
+                  <span>X (Twitter)</span>
+                  <ArrowUpRight className="w-3 h-3 text-[var(--foreground-muted)]" />
+                </a>
+              </li>
+              <li>
+                <a
+                  href="https://dribbble.com"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="hover:text-[var(--accent)] transition-colors inline-flex items-center gap-1"
+                >
+                  <span>Dribbble</span>
+                  <ArrowUpRight className="w-3 h-3 text-[var(--foreground-muted)]" />
+                </a>
+              </li>
+            </ul>
+          </div>
+
           <div>
             <h4 className="text-[var(--foreground)] font-medium mb-3 text-xs font-mono uppercase tracking-wider">
               Availability

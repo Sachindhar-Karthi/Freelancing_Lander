@@ -1,7 +1,8 @@
 "use client";
 
-import React, { useRef, useState } from "react";
-import { motion, useSpring } from "framer-motion";
+import React, { useRef, useState, useEffect } from "react";
+import { motion, useSpring, useReducedMotion } from "framer-motion";
+import { SPRING_MAGNETIC, MOTION_EASE } from "@/lib/motion";
 
 interface MagneticButtonProps {
   children: React.ReactNode;
@@ -13,6 +14,8 @@ interface MagneticButtonProps {
   type?: "button" | "submit" | "reset";
   disabled?: boolean;
   "aria-label"?: string;
+  target?: string;
+  rel?: string;
 }
 
 export function MagneticButton({
@@ -25,18 +28,30 @@ export function MagneticButton({
   type = "button",
   disabled = false,
   "aria-label": ariaLabel,
+  target,
+  rel,
 }: MagneticButtonProps) {
   const containerRef = useRef<HTMLDivElement>(null);
   const [, setIsHovered] = useState(false);
+  const shouldReduceMotion = useReducedMotion();
 
-  const springConfig = { stiffness: 350, damping: 25, mass: 0.5 };
-  const buttonX = useSpring(0, springConfig);
-  const buttonY = useSpring(0, springConfig);
-  const contentX = useSpring(0, springConfig);
-  const contentY = useSpring(0, springConfig);
+  const buttonX = useSpring(0, SPRING_MAGNETIC);
+  const buttonY = useSpring(0, SPRING_MAGNETIC);
+  const contentX = useSpring(0, SPRING_MAGNETIC);
+  const contentY = useSpring(0, SPRING_MAGNETIC);
+
+  // Reset springs immediately if reduced motion is requested
+  useEffect(() => {
+    if (shouldReduceMotion) {
+      buttonX.set(0);
+      buttonY.set(0);
+      contentX.set(0);
+      contentY.set(0);
+    }
+  }, [shouldReduceMotion, buttonX, buttonY, contentX, contentY]);
 
   const handleMouseMove = (e: React.PointerEvent) => {
-    if (disabled || typeof window === "undefined") return;
+    if (disabled || shouldReduceMotion || typeof window === "undefined") return;
     const node = containerRef.current;
     if (!node) return;
 
@@ -68,11 +83,18 @@ export function MagneticButton({
   const content = (
     <motion.div
       style={{ x: contentX, y: contentY }}
+      transition={{ ease: MOTION_EASE }}
       className="relative z-10 flex items-center justify-center gap-2 pointer-events-none w-full"
     >
       {children}
     </motion.div>
   );
+
+  const isExternal = Boolean(
+    target === "_blank" ||
+    (href && (href.startsWith("http://") || href.startsWith("https://")))
+  );
+  const resolvedRel = rel ?? (isExternal ? "noopener noreferrer" : undefined);
 
   return (
     <motion.div
@@ -81,13 +103,16 @@ export function MagneticButton({
       onPointerEnter={handlePointerEnter}
       onPointerLeave={handlePointerLeave}
       style={{ x: buttonX, y: buttonY }}
-      whileTap={{ scale: 0.97 }}
+      whileTap={shouldReduceMotion ? undefined : { scale: 0.97 }}
+      transition={{ duration: 0.15, ease: MOTION_EASE }}
       className="gpu-accel inline-flex items-center justify-center"
     >
       {href ? (
         <a
           href={href}
           onClick={onClick}
+          target={target}
+          rel={resolvedRel}
           aria-label={ariaLabel}
           className={`relative inline-flex items-center justify-center cursor-pointer select-none overflow-hidden ${className}`}
         >

@@ -32,14 +32,17 @@ export function CommandMenu({ isOpen, onClose, onSelectProject }: CommandMenuPro
 
   // Reset selected index when search query changes
   useEffect(() => {
-    setSelectedIndex(0);
+    const raf = requestAnimationFrame(() => setSelectedIndex(0));
+    return () => cancelAnimationFrame(raf);
   }, [query]);
 
   // Focus input when opened
   useEffect(() => {
     if (isOpen) {
-      setQuery("");
-      setSelectedIndex(0);
+      requestAnimationFrame(() => {
+        setQuery("");
+        setSelectedIndex(0);
+      });
       const timer = setTimeout(() => {
         inputRef.current?.focus();
       }, 50);
@@ -81,7 +84,7 @@ export function CommandMenu({ isOpen, onClose, onSelectProject }: CommandMenuPro
       className="fixed inset-0 z-50 flex items-start justify-center pt-16 sm:pt-24 px-4"
       role="dialog"
       aria-modal="true"
-      aria-labelledby="cmd-menu-title"
+      aria-label="Command Menu"
     >
       {/* Backdrop */}
       <div 
@@ -107,6 +110,7 @@ export function CommandMenu({ isOpen, onClose, onSelectProject }: CommandMenuPro
           />
           {query && (
             <button
+              type="button"
               onClick={() => setQuery("")}
               aria-label="Clear search"
               className="p-1 text-[var(--foreground-muted)] hover:text-[var(--foreground)] mr-1"
@@ -120,7 +124,7 @@ export function CommandMenu({ isOpen, onClose, onSelectProject }: CommandMenuPro
         </div>
 
         {/* Project Results List */}
-        <div ref={listRef} className="max-h-[60vh] overflow-y-auto p-2 divide-y divide-[var(--border)]/50">
+        <div ref={listRef} role="listbox" aria-label="Projects" className="max-h-[60vh] overflow-y-auto p-2 divide-y divide-[var(--border)]/50">
           {filteredProjects.length === 0 ? (
             <div className="p-8 text-center text-sm text-[var(--foreground-muted)]">
               <FolderGit2 className="w-8 h-8 mx-auto mb-2 opacity-40 text-[var(--foreground)]" />

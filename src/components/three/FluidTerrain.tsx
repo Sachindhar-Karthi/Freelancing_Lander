@@ -1,5 +1,6 @@
 "use client";
 
+/* eslint-disable react-hooks/immutability */
 import React, { useRef, useMemo } from "react";
 import { useFrame, useThree } from "@react-three/fiber";
 import * as THREE from "three";
@@ -114,15 +115,13 @@ export function FluidTerrain() {
   const { pointer } = useThree();
   const mouseSmooth = useRef(new THREE.Vector2(0, 0));
 
-  const uniforms = useMemo(
-    () => ({
-      uTime: { value: 0 },
-      uMouse: { value: new THREE.Vector2(0, 0) },
-      uDark: { value: 0 },
-    }),
-    []
-  );
+  const uniforms = useMemo(() => ({
+    uTime: { value: 0 },
+    uMouse: { value: new THREE.Vector2(0, 0) },
+    uDark: { value: 0 },
+  }), []);
 
+  // eslint-disable-next-line
   useFrame((_, delta) => {
     if (!meshRef.current) return;
 

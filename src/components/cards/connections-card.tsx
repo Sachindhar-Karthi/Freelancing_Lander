@@ -6,6 +6,7 @@ import { Canvas, useFrame } from "@react-three/fiber";
 import * as THREE from "three";
 import { LedText } from "@/components/ui/led-text";
 import { MagneticButton } from "@/components/ui/magnetic-button";
+import { MOTION_EASE } from "@/lib/motion";
 
 // Exact node coordinates mapped from relay_1.txt (viewBox 0 0 429 238)
 const NODE_COORDS = [
@@ -76,7 +77,7 @@ export function ConnectionsCard() {
       initial={{ opacity: 0, y: 16, scale: 0.985 }}
       whileInView={{ opacity: 1, y: 0, scale: 1 }}
       viewport={{ once: true, margin: "-60px" }}
-      transition={{ duration: 0.76, ease: [0.16, 1, 0.3, 1], delay: 0.35 }}
+      transition={{ duration: 0.76, ease: MOTION_EASE, delay: 0.35 }}
       className="gpu-accel relative overflow-hidden flex flex-col justify-between text-white w-full aspect-[429/554] rounded-[17px] border border-white/35 shadow-[0_2px_4px_rgba(50,28,39,0.3),inset_0_1px_0_rgba(255,255,255,0.24)]"
       style={{
         background: cardBackground,
@@ -185,6 +186,8 @@ export function ConnectionsCard() {
       {/* Magnetic CTA Button */}
       <div className="relative z-[6] pb-[7.5%] flex justify-center">
         <MagneticButton
+          href="#capabilities"
+          aria-label="Explore cross-source intelligent connections architecture"
           className="h-[44px] px-7 rounded-full bg-white text-[#2d2d2d] font-medium text-xs sm:text-sm tracking-tight shadow-[0_1px_0_rgba(255,255,255,0.5)_inset,0_1px_3px_rgba(58,25,39,0.08)] hover:shadow-[0_8px_20px_rgba(58,25,39,0.22)] transition-shadow duration-200"
         >
           <span>Learn More</span>
