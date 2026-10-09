@@ -108,7 +108,7 @@ export function Navigation() {
             className="text-[var(--foreground)] font-semibold text-xl tracking-tight flex items-center gap-1 hover:opacity-85 transition-opacity"
             aria-label="Studio Home"
           >
-            <span>Amal Agency</span>
+            <span>Freelancers</span>
             <span className="w-2 h-2 rounded-full bg-[var(--accent)] inline-block" />
           </Link>
 

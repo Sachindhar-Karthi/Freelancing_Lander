@@ -24,7 +24,7 @@ if (typeof window !== "undefined") {
  * Utilizes Framer Motion for granular micro-interaction hover states.
  */
 function FreelancerRoster() {
-  const roster = ['Trans Ragav', 'Karthi', 'Rithik', 'Anbazhagan'];
+  const roster = ['Amal Ragav', 'Karthi', 'Saran', 'Anbazhagan'];
   return (
     <div className="grid grid-cols-2 gap-3">
       {roster.map((name) => (
